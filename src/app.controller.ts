@@ -1,6 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseInterceptors,
+  UploadedFiles,
+  Post,
+  ParseFilePipe,
+  FileTypeValidator,
+  UsePipes,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { ModelService } from './model/model.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ValidNamePipe } from './files/files.pipe';
+import { memoryStorage } from 'multer';
+import { BadRequestException } from '@nestjs/common';
 
 @Controller()
 export class AppController {
@@ -69,9 +82,33 @@ export class AppController {
     return this.modelService.eliminarTablaTemporal();
   }
 
-  @Get('cargartabtemp')
-  cargartabtemp() {
-    return this.modelService.cargarTablaTemporal();
+  @Post('cargartabtemp')
+  @UseInterceptors(
+    FilesInterceptor('files', 7, {
+      storage: memoryStorage(),
+    }),
+  )
+  @UsePipes(
+    new ValidNamePipe([
+      'candidatos.csv',
+      'cargos.csv',
+      'ciudadanos.csv',
+      'departamentos.csv',
+      'mesas.csv',
+      'partidos.csv',
+      'votaciones.csv',
+    ]),
+  )
+  cargartabtemp(
+    @UploadedFiles(
+      new ParseFilePipe({
+        fileIsRequired: true,
+        validators: [new FileTypeValidator({ fileType: 'csv' })],
+      }),
+    )
+    files: Array<Express.Multer.File>,
+  ) {
+    this.modelService.cargarTablaTemporal(files);
   }
 
   @Get('eliminarmodelo')
@@ -86,6 +123,10 @@ export class AppController {
 
   @Get('cargarmodelo')
   cargarmodelo() {
-    return this.modelService.cargarModelo();
+    try {
+      return this.modelService.cargarModelo();
+    } catch (error) {
+      throw new BadRequestException(error?.message || error);
+    }
   }
 }

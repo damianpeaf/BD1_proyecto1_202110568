@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { envConfiguration } from './config/app.config';
 import { ModelService } from './model/model.service';
+import { FileProcessingService } from './file_processing/file_processing.service';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { ModelService } from './model/model.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, ModelService],
+  providers: [AppService, ModelService, FileProcessingService],
 })
 export class AppModule {}
