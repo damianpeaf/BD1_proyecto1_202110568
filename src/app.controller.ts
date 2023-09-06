@@ -14,12 +14,14 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ValidNamePipe } from './files/files.pipe';
 import { memoryStorage } from 'multer';
 import { BadRequestException } from '@nestjs/common';
+import { FilesService } from './files/files.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly modelService: ModelService,
+    private readonly filesService: FilesService,
   ) {}
 
   @Get('consulta1')
@@ -79,10 +81,10 @@ export class AppController {
 
   @Get('eliminartabtemp')
   eliminartabtemp() {
-    return this.modelService.eliminarTablaTemporal();
+    return 'La tabla temporal se elimina automáticamente al finalizar la carga de datos';
   }
 
-  @Post('cargartabtemp')
+  @Get('cargartabtemp')
   @UseInterceptors(
     FilesInterceptor('files', 7, {
       storage: memoryStorage(),
@@ -99,7 +101,7 @@ export class AppController {
       'votaciones.csv',
     ]),
   )
-  cargartabtemp(
+  async cargartabtemp(
     @UploadedFiles(
       new ParseFilePipe({
         fileIsRequired: true,
@@ -108,25 +110,24 @@ export class AppController {
     )
     files: Array<Express.Multer.File>,
   ) {
-    this.modelService.cargarTablaTemporal(files);
+    await this.modelService.cargarTablaTemporal(files);
+    return 'Información cargada correctamente';
   }
 
   @Get('eliminarmodelo')
-  eliminarmodelo() {
-    return this.modelService.eliminarModelo();
+  async eliminarmodelo() {
+    await this.modelService.eliminarModelo();
+    return 'Modelo eliminado correctamente';
   }
 
   @Get('crearmodelo')
-  crearmodelo() {
-    return this.modelService.crearModelo();
+  async crearmodelo() {
+    await this.modelService.crearModelo();
+    return 'Modelo creado correctamente';
   }
 
   @Get('cargarmodelo')
   cargarmodelo() {
-    try {
-      return this.modelService.cargarModelo();
-    } catch (error) {
-      throw new BadRequestException(error?.message || error);
-    }
+    return 'El modelo se carga automáticamente al finalizar la carga de datos a la tabla temporal';
   }
 }

@@ -6,11 +6,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { envConfiguration } from './config/app.config';
 import { ModelService } from './model/model.service';
 import { FileProcessingService } from './file_processing/file_processing.service';
+import { FilesService } from './files/files.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [envConfiguration],
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,6 +29,6 @@ import { FileProcessingService } from './file_processing/file_processing.service
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, ModelService, FileProcessingService],
+  providers: [AppService, ModelService, FileProcessingService, FilesService],
 })
 export class AppModule {}
