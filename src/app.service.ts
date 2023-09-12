@@ -1,59 +1,80 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+
+import { querys } from './querys';
 
 @Injectable()
 export class AppService {
+  private logger = new Logger('AppService');
+  constructor(private readonly dataSource: DataSource) {}
+
+  private async runQuery(q: string) {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    let result = null;
+
+    try {
+      result = await queryRunner.query(q);
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error(error);
+      throw new HttpException('Error al ejecutar una de las consultas', 400);
+    } finally {
+      await queryRunner.release();
+    }
+
+    if (Array.isArray(result) && result.length === 1) {
+      return result[0];
+    }
+
+    return result;
+  }
+
   async getPresidenciables() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta1);
   }
 
   async getDiputados() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta2);
   }
 
   async getAlcaldes() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta3);
   }
 
   async getCandidatosPorPartido() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta4);
   }
 
   async getVotosPorDepartamento() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta5);
   }
 
   async getVotosNulos() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta6);
   }
 
   async getTop10Edades() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta7);
   }
 
   async getTop10Presidenciables() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta8);
   }
 
   async getTop5Mesas() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta9);
   }
 
   async getTop5HoraConcurrida() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta10);
   }
 
   async getVotosPorGenero() {
-    // todo: implement
-    return null;
+    return this.runQuery(querys.consulta11);
   }
 }

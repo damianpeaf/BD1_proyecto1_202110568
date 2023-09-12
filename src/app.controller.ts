@@ -3,7 +3,6 @@ import {
   Get,
   UseInterceptors,
   UploadedFiles,
-  Post,
   ParseFilePipe,
   FileTypeValidator,
   UsePipes,
@@ -13,7 +12,6 @@ import { ModelService } from './model/model.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ValidNamePipe } from './files/files.pipe';
 import { memoryStorage } from 'multer';
-import { BadRequestException } from '@nestjs/common';
 import { FilesService } from './files/files.service';
 
 @Controller()

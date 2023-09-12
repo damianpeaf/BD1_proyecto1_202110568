@@ -27,10 +27,8 @@ export class FileProcessingService {
     return new Promise((resolve, reject) => {
       const results: any[] = [];
 
-      // Crea un stream de lectura desde el archivo CSV
       const stream = Readable.from(file.buffer);
 
-      // Utiliza csv-parser para analizar el contenido del archivo CSV
       stream
         .pipe(csvParser())
         .on('data', (row) => results.push(row))

@@ -17,7 +17,7 @@ import {
   insertVotoScript,
   insertDetalleVotoScript,
   loadTemporaryIntoModelScript,
-} from './scripts';
+} from './ddl';
 
 @Injectable()
 export class ModelService {
@@ -38,10 +38,8 @@ export class ModelService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    let currentQuery = '';
     try {
       for (const query of args) {
-        currentQuery = query;
         await queryRunner.query(query);
       }
       await queryRunner.commitTransaction();
@@ -81,8 +79,6 @@ export class ModelService {
       insertDetalleVotoScript(this.tables['detalle_voto']),
       ...loadTemporaryIntoModelScript,
     );
-
-    // TODO : load data into temporary tables
 
     this.tables = {};
     return true;
