@@ -26,7 +26,7 @@ El Tribunal Supremo Electoral (TSE) tiene la responsabilidad crucial de recopila
 
 ## **Modelo lógico de la base de datos**
 
-![Modelo lógico de la base de datos](logical.svg)
+![Modelo lógico de la base de datos](Logical.svg)
 
 ## **Modelo físico de la base de datos**
 
