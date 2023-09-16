@@ -35,46 +35,126 @@ export class AppService {
   }
 
   async getPresidenciables() {
-    return this.runQuery(querys.consulta1);
+    const resp = await this.runQuery(querys.consulta1);
+    return {
+      consulta: 1,
+      rows: resp.length,
+      return: resp,
+    };
   }
 
   async getDiputados() {
-    return this.runQuery(querys.consulta2);
+    const resp = await this.runQuery(querys.consulta2);
+    return {
+      consulta: 2,
+      rows: resp.length,
+      return: resp.map((r) => ({
+        ...r,
+        Cantidad: parseInt(r.Cantidad, 10),
+      })),
+    };
   }
 
   async getAlcaldes() {
-    return this.runQuery(querys.consulta3);
+    const resp = await this.runQuery(querys.consulta3);
+    return {
+      consulta: 3,
+      rows: resp.length,
+      return: resp,
+    };
   }
 
   async getCandidatosPorPartido() {
-    return this.runQuery(querys.consulta4);
+    const resp = await this.runQuery(querys.consulta4);
+    return {
+      consulta: 4,
+      rows: resp.length,
+      return: resp.map((r) => ({
+        ...r,
+        Cantidad: parseInt(r.Cantidad, 10),
+      })),
+    };
   }
 
   async getVotosPorDepartamento() {
-    return this.runQuery(querys.consulta5);
+    const resp = await this.runQuery(querys.consulta5);
+    return {
+      consulta: 5,
+      rows: resp.length,
+      return: resp.map((r) => ({
+        ...r,
+        Cantidad_votaciones: parseInt(r.Cantidad_votaciones, 10),
+      })),
+    };
   }
 
   async getVotosNulos() {
-    return this.runQuery(querys.consulta6);
+    const resp = await this.runQuery(querys.consulta6);
+    return {
+      consulta: 6,
+      return: resp,
+    };
   }
 
   async getTop10Edades() {
-    return this.runQuery(querys.consulta7);
+    const resp = await this.runQuery(querys.consulta7);
+    return {
+      consulta: 7,
+      return: resp.map((r, i) => ({
+        edad: parseInt(r.edad, 10),
+        cantidad: parseInt(r.cantidad, 10),
+        puesto: i + 1,
+      })),
+    };
   }
 
   async getTop10Presidenciables() {
-    return this.runQuery(querys.consulta8);
+    const resp = await this.runQuery(querys.consulta8);
+    return {
+      consulta: 8,
+      return: resp.map((r, i) => ({
+        ...r,
+        votos_totales: parseInt(r.votos_totales, 10),
+        puesto: i + 1,
+      })),
+    };
   }
 
   async getTop5Mesas() {
-    return this.runQuery(querys.consulta9);
+    const resp = await this.runQuery(querys.consulta9);
+    return {
+      consulta: 9,
+      return: resp.map((r, i) => ({
+        ...r,
+        cantidad_votos: parseInt(r.cantidad_votos, 10),
+        puesto: i + 1,
+      })),
+    };
   }
 
   async getTop5HoraConcurrida() {
-    return this.runQuery(querys.consulta10);
+    const res = (await this.runQuery(querys.consulta10)) as [
+      { hora_y_minutos: string; no_de_votos: string },
+    ];
+
+    return {
+      consulta: 10,
+      return: res.map((r, i) => ({
+        hora_y_minutos: new Date(r.hora_y_minutos).toLocaleString(),
+        no_de_votos: parseInt(r.no_de_votos, 10),
+        puesto: i + 1,
+      })),
+    };
   }
 
   async getVotosPorGenero() {
-    return this.runQuery(querys.consulta11);
+    const resp = await this.runQuery(querys.consulta11);
+    return {
+      consulta: 11,
+      return: resp.map((r) => ({
+        ...r,
+        cantidad_de_votos: parseInt(r.cantidad_de_votos, 10),
+      })),
+    };
   }
 }
