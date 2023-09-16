@@ -2,7 +2,7 @@
 ### Universidad de San Carlos de Guatemala
 ### Facultad de Ingeniería
 ### Escuela de Ciencias y Sistemas
-### Organización de Lenguajes y Compiladores 2
+### Sistema de Bases de Datos 1
 <br></br>
 
 ## **Manual Técnico**
